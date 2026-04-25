@@ -4,7 +4,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     anthropic_api_key: str
-    database_url: str = "postgresql+asyncpg://diy:diy@localhost:5432/vehicle_diy"
+    database_url: str = "postgresql+asyncpg://diy:diy@localhost:5433/vehicle_diy"
     redis_url: str = "redis://localhost:6379/0"
 
     tavily_api_key: str = ""
