@@ -321,16 +321,23 @@ text-transform:uppercase;margin-bottom:8px;">Step {current_step['step_number']}<
         if current_step.get("torque_spec"):
             st.warning(f"🔩 Torque: **{current_step['torque_spec']}**")
 
-        # Step image
+        # Step images
         images = current_step.get("images", [])
         if images:
-            valid = [i for i in images if i.get("url", "").startswith("http")]
-            if valid:
-                st.image(valid[0]["url"], use_container_width=True)
-                if len(valid) > 1:
-                    with st.expander("More photos"):
-                        for img in valid[1:]:
-                            st.image(img["url"], use_container_width=True)
+            youtube = [i for i in images if i.get("source") == "youtube_embed"]
+            web_imgs = [i for i in images if i.get("source") == "web" and i.get("url", "").startswith("http")]
+
+            if web_imgs:
+                st.image(web_imgs[0]["url"], use_container_width=True)
+
+            if youtube:
+                with st.expander("📺 Watch repair video"):
+                    st.video(youtube[0]["url"])
+
+            if len(web_imgs) > 1:
+                with st.expander("More photos"):
+                    for img in web_imgs[1:]:
+                        st.image(img["url"], use_container_width=True)
 
         # Optional detail collapsed
         with st.expander("Why this step?"):
