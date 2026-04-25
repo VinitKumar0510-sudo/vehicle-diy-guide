@@ -16,8 +16,9 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     environment: str = "development"
 
-    claude_model: str = "claude-sonnet-4-6"
-    claude_vision_model: str = "claude-sonnet-4-6"
+    claude_model: str = "claude-sonnet-4-6"        # guide synthesis — keep Sonnet
+    claude_chat_model: str = "claude-haiku-4-5-20251001"   # intent + session chat — Haiku
+    claude_vision_model: str = "claude-sonnet-4-6"  # diagram processing — keep Sonnet
 
     class Config:
         env_file = ".env"

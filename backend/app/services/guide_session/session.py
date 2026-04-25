@@ -73,7 +73,7 @@ async def chat(state: SessionState, user_message: str) -> SessionResponse:
     ] + state.conversation_history
 
     response = await client.messages.create(
-        model=settings.claude_model,
+        model=settings.claude_chat_model,
         max_tokens=1024,
         system=GUIDE_SESSION_SYSTEM,
         messages=messages,

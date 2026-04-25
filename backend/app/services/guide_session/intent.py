@@ -47,7 +47,7 @@ async def classify_intent(user_input: str, vehicle_context: str = "") -> Classif
     prompt = f"{context}User said: \"{user_input}\""
 
     response = await client.messages.create(
-        model=settings.claude_model,
+        model=settings.claude_chat_model,
         max_tokens=512,
         system=INTENT_SYSTEM + "\n\nCRITICAL: Return raw JSON only. No markdown fences, no explanation. Start with { and end with }.",
         messages=[{"role": "user", "content": prompt}],
