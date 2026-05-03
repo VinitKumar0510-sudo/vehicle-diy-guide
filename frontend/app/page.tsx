@@ -32,17 +32,17 @@ const SAMPLE_STEPS = [
 ];
 
 const C = {
-  cream: "#F9F7F3",
-  white: "#FFFFFF",
-  navy: "#1B2A4A",
-  navy80: "#2d4068",
+  cream: "#09090f",
+  white: "#111118",
+  navy: "#f1f5f9",
+  navy80: "#94a3b8",
   orange: "#E8703A",
   orangeDark: "#c85e2a",
-  orangeBg: "#FEF3ED",
-  border: "#E8E3DA",
-  muted: "#6B7280",
-  body: "#374151",
-  lightGray: "#F0EDE8",
+  orangeBg: "#1a1208",
+  border: "#1e2030",
+  muted: "#94a3b8",
+  body: "#cbd5e1",
+  lightGray: "#0d0d14",
 };
 
 export default function Home() {
@@ -86,7 +86,7 @@ export default function Home() {
 
   const inputStyle = (focused: boolean): React.CSSProperties => ({
     width: "100%",
-    background: C.cream,
+    background: "#1a1a26",
     border: `1px solid ${focused ? C.orange : C.border}`,
     borderRadius: 10,
     padding: "14px 16px",
@@ -104,7 +104,7 @@ export default function Home() {
     <div style={{ fontFamily: "var(--font-inter, sans-serif)", background: C.cream, minHeight: "100dvh", color: C.navy }}>
 
       {/* ── NAV ──────────────────────────────────────────── */}
-      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(249,247,243,0.96)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottom: `1px solid ${C.border}` }}>
+      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(9,9,15,0.92)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottom: `1px solid ${C.border}` }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -134,10 +134,10 @@ export default function Home() {
       </nav>
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section style={{ padding: "72px 24px 88px", maxWidth: 1200, margin: "0 auto" }}>
+      <section style={{ padding: "80px 24px 80px", maxWidth: 1200, margin: "0 auto" }}>
 
         {/* Pill badge */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: C.white, border: `1px solid ${C.border}`, borderRadius: 100, padding: "6px 14px", marginBottom: 36, fontSize: 12, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase" as const, color: C.navy }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1a26", border: `1px solid ${C.border}`, borderRadius: 100, padding: "6px 14px", marginBottom: 36, fontSize: 12, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase" as const, color: C.navy }}>
           <span style={{ width: 8, height: 8, borderRadius: "50%", background: C.orange, display: "inline-block", flexShrink: 0 }} />
           AI Mechanic, On Call
         </div>
@@ -158,7 +158,7 @@ export default function Home() {
 
         {/* Form card */}
         <form id="hero-form" onSubmit={handleSubmit}>
-          <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 18, padding: "24px 24px 20px", boxShadow: "0 4px 32px rgba(0,0,0,0.07)", maxWidth: 880 }}>
+          <div style={{ background: "#111118", border: `1px solid ${C.border}`, borderRadius: 18, padding: "24px 24px 20px", boxShadow: "0 4px 32px rgba(0,0,0,0.4)", maxWidth: 880 }}>
             <div className="lp-form-grid">
               <div>
                 <label style={{ display: "block", fontSize: 11, fontWeight: 700, letterSpacing: 1.4, textTransform: "uppercase" as const, color: C.muted, marginBottom: 8 }}>Your Vehicle</label>
@@ -210,7 +210,7 @@ export default function Home() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────── */}
-      <section id="how-it-works" style={{ background: C.white, padding: "80px 24px" }}>
+      <section id="how-it-works" style={{ background: "#0d0d14", padding: "72px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.8, textTransform: "uppercase" as const, color: C.orange, marginBottom: 12 }}>The Process</p>
           <h2 style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 800, letterSpacing: "-1px", marginBottom: 48 }}>How a guide gets built</h2>
@@ -219,7 +219,7 @@ export default function Home() {
               <div key={s.n} style={{ background: C.cream, border: `1px solid ${C.border}`, borderRadius: 18, padding: 28 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
                   <span style={{ fontSize: 13, fontWeight: 700, color: C.muted, letterSpacing: 1 }}>{s.n}</span>
-                  <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 10, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{s.icon}</div>
+                  <div style={{ background: "#1a1a26", border: `1px solid ${C.border}`, borderRadius: 10, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{s.icon}</div>
                 </div>
                 <h3 style={{ fontSize: 18, fontWeight: 700, color: C.orange, marginBottom: 10 }}>{s.title}</h3>
                 <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.65, fontFamily: "var(--font-mono, monospace)" }}>{s.body}</p>
@@ -230,7 +230,7 @@ export default function Home() {
       </section>
 
       {/* ── SOURCES ──────────────────────────────────────── */}
-      <section id="sources" style={{ background: C.lightGray, padding: "80px 24px" }}>
+      <section id="sources" style={{ background: "#111118", padding: "72px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div className="lp-grid-2">
             <div>
@@ -247,9 +247,9 @@ export default function Home() {
                 { icon: "📺", title: "YouTube transcripts", body: "ChrisFix, Scotty Kilmer, South Main Auto, ETCG, model-specific channels" },
                 { icon: "💬", title: "Car forums", body: "Model owner forums, r/MechanicAdvice, BobIsTheOilGuy, 9thCivic, TacomaWorld" },
               ].map(src => (
-                <div key={src.title} style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: 24 }}>
+                <div key={src.title} style={{ background: "#1a1a26", border: `1px solid ${C.border}`, borderRadius: 16, padding: 24 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                    <div style={{ background: "#FEF3ED", borderRadius: 10, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{src.icon}</div>
+                    <div style={{ background: "#251810", borderRadius: 10, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{src.icon}</div>
                     <h3 style={{ fontSize: 16, fontWeight: 700, color: C.orange }}>{src.title}</h3>
                   </div>
                   <p style={{ fontSize: 14, color: C.muted, fontFamily: "var(--font-mono, monospace)", lineHeight: 1.55 }}>{src.body}</p>
@@ -261,7 +261,7 @@ export default function Home() {
       </section>
 
       {/* ── SAMPLE OUTPUT ────────────────────────────────── */}
-      <section id="sample" style={{ background: C.cream, padding: "80px 24px" }}>
+      <section id="sample" style={{ background: "#09090f", padding: "72px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40, flexWrap: "wrap", gap: 16 }}>
             <div>
@@ -269,14 +269,14 @@ export default function Home() {
               <h2 style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(30px, 4vw, 44px)", fontWeight: 800, letterSpacing: "-1px" }}>What you'll get back</h2>
             </div>
             <button onClick={fillExample}
-              style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 20px", fontSize: 14, fontWeight: 600, color: C.navy, cursor: "pointer", transition: "background 0.15s" }}
-              onMouseEnter={e => (e.currentTarget.style.background = C.cream)}
-              onMouseLeave={e => (e.currentTarget.style.background = C.white)}>
+              style={{ background: "#1a1a26", border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 20px", fontSize: 14, fontWeight: 600, color: C.navy, cursor: "pointer", transition: "background 0.15s" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#252538")}
+              onMouseLeave={e => (e.currentTarget.style.background = "#1a1a26")}>
               Try this example →
             </button>
           </div>
 
-          <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 20, overflow: "hidden", boxShadow: "0 8px 48px rgba(0,0,0,0.07)" }}>
+          <div style={{ background: "#111118", border: `1px solid ${C.border}`, borderRadius: 20, overflow: "hidden", boxShadow: "0 8px 48px rgba(0,0,0,0.4)" }}>
 
             {/* Guide header */}
             <div style={{ padding: "28px 32px", borderBottom: `1px solid ${C.border}` }}>
@@ -285,14 +285,14 @@ export default function Home() {
                 Front Brake Pad Replacement — 2015 Honda Civic EX
               </h3>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                {[["Moderate", "#F3F4F6", C.body], ["⏱ 1.5 – 2 hours", "#F3F4F6", C.body], ["💰 $45 – $90 (parts)", "#F3F4F6", C.body]].map(([label, bg, color]) => (
+                {[["Moderate", "#1a1a26", C.body], ["⏱ 1.5 – 2 hours", "#1a1a26", C.body], ["💰 $45 – $90 (parts)", "#1a1a26", C.body]].map(([label, bg, color]) => (
                   <span key={label} style={{ background: bg, color, fontSize: 13, fontWeight: 500, padding: "6px 12px", borderRadius: 8, border: `1px solid ${C.border}`, fontFamily: "var(--font-mono, monospace)" }}>{label}</span>
                 ))}
               </div>
             </div>
 
             {/* Safety */}
-            <div style={{ padding: "20px 32px", borderBottom: `1px solid ${C.border}`, background: "#FFF8F8" }}>
+            <div style={{ padding: "20px 32px", borderBottom: `1px solid ${C.border}`, background: "#1a0a0a" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#dc2626", marginBottom: 12, display: "flex", alignItems: "center", gap: 8, letterSpacing: 0.5, textTransform: "uppercase" as const }}>
                 ⚠ Safety First
               </p>
@@ -346,7 +346,7 @@ export default function Home() {
                   { icon: "💬", text: "9thCivic.com — 9th Gen Front Brake Pad DIY Thread" },
                   { icon: "💬", text: "r/MechanicAdvice — Civic squeaking after pad swap" },
                 ].map(src => (
-                  <div key={src.text} style={{ background: C.cream, border: `1px solid ${C.border}`, borderRadius: 10, padding: "10px 14px", display: "flex", gap: 10, alignItems: "center" }}>
+                  <div key={src.text} style={{ background: "#1a1a26", border: `1px solid ${C.border}`, borderRadius: 10, padding: "10px 14px", display: "flex", gap: 10, alignItems: "center" }}>
                     <span style={{ fontSize: 14, flexShrink: 0 }}>{src.icon}</span>
                     <span style={{ fontSize: 13, color: C.body, fontFamily: "var(--font-mono, monospace)", lineHeight: 1.4 }}>{src.text}</span>
                   </div>

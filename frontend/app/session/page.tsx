@@ -149,18 +149,6 @@ export default function SessionPage() {
           </details>
         )}
 
-        {/* Step image */}
-        {step.images && step.images.filter(img => img.source === "web" && img.url.startsWith("http")).length > 0 && (
-          <div style={{ borderRadius: 14, overflow: "hidden", marginBottom: 16, border: "1px solid var(--border)" }}>
-            <img
-              src={step.images.find(img => img.source === "web")!.url}
-              alt={step.title}
-              style={{ width: "100%", display: "block", maxHeight: 220, objectFit: "cover" }}
-              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
-            />
-          </div>
-        )}
-
         {/* Confidence indicator */}
         <p style={{ fontSize: 12, color: "var(--subtle)" }}>
           Step confidence: {Math.round(step.confidence * 100)}%
