@@ -1,29 +1,39 @@
 @import "tailwindcss";
 
+/* ── Light theme (landing page) ────────────────────── */
 :root {
-  --bg:       #09090f;
-  --surface:  #111118;
-  --surface2: #1a1a26;
-  --border:   #1e2030;
-  --green:    #22c55e;
-  --green-dim:#15803d;
-  --amber:    #f59e0b;
-  --red:      #ef4444;
-  --text:     #f1f5f9;
-  --muted:    #64748b;
-  --subtle:   #334155;
+  --cream:        #F9F7F3;
+  --white:        #FFFFFF;
+  --navy:         #1B2A4A;
+  --navy-80:      #2d4068;
+  --orange:       #E8703A;
+  --orange-dark:  #c85e2a;
+  --orange-bg:    #FEF3ED;
+  --border-light: #E8E3DA;
+  --muted:        #6B7280;
+
+  /* Dark theme (app screens) */
+  --bg:           #09090f;
+  --surface:      #111118;
+  --surface2:     #1a1a26;
+  --border:       #1e2030;
+  --green:        #22c55e;
+  --green-dim:    #15803d;
+  --amber:        #f59e0b;
+  --red:          #ef4444;
+  --text:         #f1f5f9;
+  --subtle:       #94a3b8;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  font-family: var(--font-inter, -apple-system, BlinkMacSystemFont, sans-serif);
   -webkit-font-smoothing: antialiased;
   min-height: 100dvh;
 }
 
+/* ── Dark app utilities ─────────────────────────────── */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -70,16 +80,18 @@ body {
   width: 100%;
   outline: none;
   transition: border-color 0.15s;
+  font-family: inherit;
 }
 .input:focus { border-color: var(--green); }
-.input::placeholder { color: var(--muted); }
+.input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.input::placeholder { color: var(--subtle); }
 
 .label {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--subtle);
   margin-bottom: 8px;
   display: block;
 }
@@ -88,9 +100,63 @@ body {
 .tag-amber { background:#451a03; color:#fcd34d; border-radius:8px; padding:4px 10px; font-size:12px; font-weight:600; }
 .tag-red   { background:#450a0a; color:#fca5a5; border-radius:8px; padding:4px 10px; font-size:12px; font-weight:600; }
 
-select.input { appearance: none; cursor: pointer; }
+select.input { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
 textarea.input { resize: none; }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── Focus rings ────────────────────────────────────── */
+button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+a:focus-visible      { outline: 2px solid var(--orange); outline-offset: 2px; border-radius: 4px; }
+
+/* ── Landing page responsive grids ─────────────────── */
+.lp-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.lp-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.lp-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 16px;
+  align-items: flex-end;
+}
+.lp-sources-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.lp-tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.lp-stats {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.lp-nav-links {
+  display: flex;
+  gap: 32px;
+}
+
+@media (max-width: 900px) {
+  .lp-grid-3    { grid-template-columns: 1fr; }
+  .lp-grid-2    { grid-template-columns: 1fr; gap: 32px; }
+  .lp-form-grid { grid-template-columns: 1fr; }
+  .lp-tools-grid { grid-template-columns: 1fr; }
+  .lp-nav-links { display: none; }
+}
+
+@media (max-width: 640px) {
+  .lp-sources-grid { grid-template-columns: 1fr; }
+  .lp-stats { gap: 24px; }
+}
