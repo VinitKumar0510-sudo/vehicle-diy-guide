@@ -56,6 +56,7 @@ async def save_guide(
         safety_tier=guide.safety_tier,
         confidence_score=guide.confidence_score,
         sources=guide.sources,
+        warnings=guide.warnings,
     )
     db.add(db_guide)
     await db.commit()
@@ -76,7 +77,7 @@ def db_guide_to_synthesized(db_guide: RepairGuide) -> SynthesizedGuide:
         safety_tier=db_guide.safety_tier,
         confidence_score=db_guide.confidence_score,
         sources=db_guide.sources,
-        warnings=[],
+        warnings=db_guide.warnings or [],
     )
 
 

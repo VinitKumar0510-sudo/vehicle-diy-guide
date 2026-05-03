@@ -29,6 +29,7 @@ class RepairGuide(Base):
 
     confidence_score: Mapped[float] = mapped_column(Float)
     sources: Mapped[list] = mapped_column(JSON)
+    warnings: Mapped[list] = mapped_column(JSON, default=list)
 
     community_rating: Mapped[float | None] = mapped_column(Float, nullable=True)
     rating_count: Mapped[int] = mapped_column(Integer, default=0)

@@ -85,27 +85,11 @@ async def chat(state: SessionState, user_message: str) -> SessionResponse:
     safety_keywords = ["stop", "danger", "do not drive", "professional", "unsafe", "immediately"]
     safety_flag = any(kw in reply.lower() for kw in safety_keywords)
 
-    step_advanced = _check_step_advance(user_message)
-    if step_advanced and state.current_step < len(state.guide.steps) - 1:
-        state.completed_steps.append(state.current_step)
-        state.current_step += 1
-    elif step_advanced and state.current_step == len(state.guide.steps) - 1:
-        state.is_complete = True
-        state.completed_steps.append(state.current_step)
-
     return SessionResponse(
         message=reply,
         current_step=state.current_step + 1,
         total_steps=len(state.guide.steps),
-        step_complete=step_advanced,
+        step_complete=False,
         is_finished=state.is_complete,
         safety_flag=safety_flag,
     )
-
-
-def _check_step_advance(message: str) -> bool:
-    advance_phrases = [
-        "done", "complete", "finished", "next step", "next",
-        "got it", "mark complete", "did it", "moved on", "ready"
-    ]
-    return any(phrase in message.lower() for phrase in advance_phrases)

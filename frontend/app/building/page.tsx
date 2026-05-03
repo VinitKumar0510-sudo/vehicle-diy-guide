@@ -33,18 +33,25 @@ export default function BuildingPage() {
       if (i < STEPS.length) setStep(i);
     }, 7000);
 
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+      setError("This is taking too long. Check that the server is running and try again.");
+    }, 90000);
+
     buildGuide(state.make, state.model, state.year, state.repair, state.engine)
       .then(guide => {
         clearInterval(interval);
+        clearTimeout(timeout);
         sessionStorage.setItem("guide", JSON.stringify(guide));
         router.push("/preflight");
       })
       .catch(() => {
         clearInterval(interval);
+        clearTimeout(timeout);
         setError("Couldn't build the guide. Try again.");
       });
 
-    return () => clearInterval(interval);
+    return () => { clearInterval(interval); clearTimeout(timeout); };
   }, [router]);
 
   if (error) return (
