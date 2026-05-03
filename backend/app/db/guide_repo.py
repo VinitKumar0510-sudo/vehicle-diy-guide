@@ -15,18 +15,35 @@ async def find_guide(
     year: int,
     repair: str,
 ) -> RepairGuide | None:
-    stmt = select(RepairGuide).where(
-        and_(
-            RepairGuide.make.ilike(make),
-            RepairGuide.model.ilike(model),
-            RepairGuide.year_start <= year,
-            RepairGuide.year_end >= year,
-            RepairGuide.repair_type.ilike(repair),
-        )
-    ).order_by(RepairGuide.confidence_score.desc()).limit(1)
+    vehicle_filters = and_(
+        RepairGuide.make.ilike(make),
+        RepairGuide.model.ilike(model),
+        RepairGuide.year_start <= year,
+        RepairGuide.year_end >= year,
+    )
 
+    # Stage 1: exact repair string match
+    stmt = select(RepairGuide).where(
+        and_(vehicle_filters, RepairGuide.repair_type.ilike(repair))
+    ).order_by(RepairGuide.confidence_score.desc()).limit(1)
     result = await db.execute(stmt)
-    return result.scalar_one_or_none()
+    hit = result.scalar_one_or_none()
+    if hit:
+        return hit
+
+    # Stage 2: same vehicle + same repair system (handles non-deterministic intent)
+    system = _infer_system(repair)
+    if system != "general":
+        stmt = select(RepairGuide).where(
+            and_(vehicle_filters, RepairGuide.system == system)
+        ).order_by(RepairGuide.confidence_score.desc()).limit(1)
+        result = await db.execute(stmt)
+        hit = result.scalar_one_or_none()
+        if hit:
+            logger.info(f"Cache hit via system fallback ({system}): {hit.title}")
+            return hit
+
+    return None
 
 
 async def save_guide(
