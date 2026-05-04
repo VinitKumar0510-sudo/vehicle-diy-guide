@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     reddit_user_agent: str = "VehicleDIYBot/1.0"
     youtube_api_key: str = ""
 
+    allowed_origins: list[str] = ["http://localhost:3000"]
     log_level: str = "INFO"
     environment: str = "development"
 

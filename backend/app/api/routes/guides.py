@@ -1,9 +1,12 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from app.services.knowledge_builder.agent import build_guide
 from app.services.guide_session.intent import classify_intent
 
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 
 class IntentRequest(BaseModel):
@@ -20,7 +23,8 @@ class GuideRequest(BaseModel):
 
 
 @router.post("/intent")
-async def detect_intent(req: IntentRequest):
+@limiter.limit("30/hour")
+async def detect_intent(request: Request, req: IntentRequest):
     result = await classify_intent(req.query, req.vehicle_desc)
     return {
         "intent_type": result.intent_type,
@@ -32,7 +36,8 @@ async def detect_intent(req: IntentRequest):
 
 
 @router.post("/build")
-async def build(req: GuideRequest):
+@limiter.limit("10/hour")
+async def build(request: Request, req: GuideRequest):
     result = await build_guide(
         make=req.make,
         model=req.model,

@@ -6,12 +6,29 @@ from typing import Optional
 from app.services.knowledge_builder.sources.youtube import search_repair_videos
 from app.services.knowledge_builder.sources.reddit import fetch_repair_posts
 from app.services.knowledge_builder.sources.web import search_repair_guides
-from app.services.knowledge_builder.sources.images import fetch_step_images
 from app.services.knowledge_builder.synthesizer import synthesize_guide, SynthesizedGuide
+from app.config import get_settings
 
 logger = logging.getLogger(__name__)
 
 LOW_CONFIDENCE_THRESHOLD = 0.65
+
+# Simple repairs: well-documented, low-risk, short guides — Haiku is sufficient
+_SIMPLE_REPAIRS = {
+    "wiper blade replacement",
+    "air filter replacement",
+    "cabin air filter replacement",
+    "battery replacement",
+}
+
+
+def _pick_model(repair: str) -> str:
+    """Use Haiku for simple repairs, Sonnet for everything else."""
+    settings = get_settings()
+    if repair.lower().strip() in _SIMPLE_REPAIRS:
+        logger.info(f"Using Haiku for simple repair: {repair}")
+        return settings.claude_chat_model   # Haiku
+    return settings.claude_model            # Sonnet
 
 
 @dataclass
@@ -68,9 +85,11 @@ async def build_guide(
         f"Sources: {len(web_sources)} web, {len(video_sources)} videos, {len(reddit_posts)} reddit"
     )
 
+    model_id = _pick_model(repair)
     guide = await synthesize_guide(
         make=make, model=model, year=year, repair=repair, engine=engine,
         web_sources=web_sources, video_sources=video_sources, reddit_posts=reddit_posts,
+        model_id=model_id,
     )
 
     needs_review = guide is None or guide.confidence_score < LOW_CONFIDENCE_THRESHOLD
@@ -80,19 +99,11 @@ async def build_guide(
             f"Low confidence ({guide.confidence_score:.2f}) for {year} {make} {model} — {repair}"
         )
 
-    # Attach images to each step
-    if guide:
-        video_ids = [v.video_id for v in video_sources]
-        for step in guide.steps:
-            imgs = await fetch_step_images(
-                make=make, model=model, year=year,
-                repair=repair, step_title=step["title"],
-                video_ids=video_ids,
-            )
-            step["images"] = [{"url": i.url, "caption": i.caption, "source": i.source} for i in imgs]
-
-    # Save to DB so next user gets it instantly
-    if guide and not needs_review:
+    # Save to DB so next user gets it instantly.
+    # Always save if confidence >= 0.3 — low-confidence guides still have valid steps,
+    # they just need the "verify spec" warning shown on screen. Saves re-hitting the API
+    # on every pre-builder run.
+    if guide and guide.confidence_score >= 0.3:
         try:
             from app.db.connection import AsyncSessionLocal
             from app.db.guide_repo import save_guide

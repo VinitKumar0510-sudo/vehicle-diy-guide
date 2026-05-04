@@ -150,6 +150,7 @@ async def synthesize_guide(
     web_sources: Optional[list[WebSource]] = None,
     video_sources: Optional[list[VideoSource]] = None,
     reddit_posts: Optional[list[RedditPost]] = None,
+    model_id: Optional[str] = None,
 ) -> Optional[SynthesizedGuide]:
     client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
 
@@ -165,7 +166,7 @@ async def synthesize_guide(
     )
 
     response = await client.messages.create(
-        model=settings.claude_model,
+        model=model_id or settings.claude_model,
         max_tokens=8192,
         system="You are an expert automotive technician. Return only valid JSON. No markdown fences, no explanation, no commentary. Start your response with { and end with }.",
         messages=[{"role": "user", "content": prompt}],

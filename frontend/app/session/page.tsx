@@ -17,6 +17,7 @@ export default function SessionPage() {
   const [input, setInput]           = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const [advancing, setAdvancing]   = useState(false);
+  const [stepsOpen, setStepsOpen]   = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -91,6 +92,36 @@ export default function SessionPage() {
         <span style={{ fontSize: 13, color: "var(--muted)", whiteSpace: "nowrap" }}>
           {currentStep + 1} / {total}
         </span>
+      </div>
+
+      {/* Step overview toggle */}
+      <div style={{ borderBottom: "1px solid var(--border)" }}>
+        <button
+          onClick={() => setStepsOpen(o => !o)}
+          style={{ width: "100%", padding: "10px 20px", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--muted)", fontSize: 13 }}
+        >
+          <span>≡ All {total} steps</span>
+          <span style={{ transition: "transform 0.2s", display: "inline-block", transform: stepsOpen ? "rotate(180deg)" : "none" }}>▾</span>
+        </button>
+
+        {stepsOpen && (
+          <div style={{ padding: "0 20px 12px", display: "flex", flexDirection: "column", gap: 2, maxHeight: 280, overflowY: "auto" }}>
+            {guide.steps.map((s, i) => {
+              const isDone = completed.includes(i);
+              const isCurrent = i === currentStep;
+              return (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 10px", borderRadius: 8, background: isCurrent ? "var(--surface2)" : "none" }}>
+                  <span style={{ flexShrink: 0, width: 20, height: 20, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, background: isDone ? "var(--green)" : isCurrent ? "var(--green)" : "var(--surface2)", color: isDone || isCurrent ? "#000" : "var(--muted)" }}>
+                    {isDone ? "✓" : i + 1}
+                  </span>
+                  <span style={{ fontSize: 13, color: isCurrent ? "var(--text)" : isDone ? "var(--muted)" : "var(--muted)", fontWeight: isCurrent ? 600 : 400, textDecoration: isDone ? "line-through" : "none" }}>
+                    {s.title}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Step content */}
