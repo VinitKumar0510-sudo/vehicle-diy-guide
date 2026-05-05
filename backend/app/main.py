@@ -94,8 +94,8 @@ async def health():
         redis = await get_redis()
         await redis.ping()
         components["redis"] = "ok"
-    except Exception as e:
-        components["redis"] = f"{type(e).__name__}: {e}"
+    except Exception:
+        components["redis"] = "error"
         overall = "degraded"
 
     try:
