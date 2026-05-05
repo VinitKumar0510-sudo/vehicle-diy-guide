@@ -14,11 +14,14 @@ logger = logging.getLogger(__name__)
 LOW_CONFIDENCE_THRESHOLD = 0.65
 
 # Simple repairs: well-documented, low-risk, short guides — Haiku is sufficient
+# Reddit adds nothing for these; skip it to cut build time by 2-5s.
 _SIMPLE_REPAIRS = {
     "wiper blade replacement",
     "air filter replacement",
     "cabin air filter replacement",
     "battery replacement",
+    "oil change",
+    "oil and filter change",
 }
 
 
@@ -70,16 +73,23 @@ async def build_guide(
     except Exception as e:
         logger.warning(f"DB cache lookup failed, building fresh: {e}")
 
-    logger.info(f"Building guide: {year} {make} {model} — {repair}")
+    is_simple = repair.lower().strip() in _SIMPLE_REPAIRS
+    logger.info(f"Building guide ({'fast path' if is_simple else 'full path'}): {year} {make} {model} — {repair}")
 
-    web_task    = search_repair_guides(make, model, year, repair)
-    video_task  = search_repair_videos(make, model, year, repair)
-    reddit_task = fetch_repair_posts(make, model, year, repair)
+    web_task   = search_repair_guides(make, model, year, repair)
+    video_task = search_repair_videos(make, model, year, repair)
 
-    results = await asyncio.gather(web_task, video_task, reddit_task, return_exceptions=True)
-    web_sources   = results[0] if not isinstance(results[0], Exception) else []
-    video_sources = results[1] if not isinstance(results[1], Exception) else []
-    reddit_posts  = results[2] if not isinstance(results[2], Exception) else []
+    if is_simple:
+        results = await asyncio.gather(web_task, video_task, return_exceptions=True)
+        web_sources   = results[0] if not isinstance(results[0], Exception) else []
+        video_sources = results[1] if not isinstance(results[1], Exception) else []
+        reddit_posts: list = []
+    else:
+        reddit_task = fetch_repair_posts(make, model, year, repair)
+        results = await asyncio.gather(web_task, video_task, reddit_task, return_exceptions=True)
+        web_sources   = results[0] if not isinstance(results[0], Exception) else []
+        video_sources = results[1] if not isinstance(results[1], Exception) else []
+        reddit_posts  = results[2] if not isinstance(results[2], Exception) else []
 
     logger.info(
         f"Sources: {len(web_sources)} web, {len(video_sources)} videos, {len(reddit_posts)} reddit"
