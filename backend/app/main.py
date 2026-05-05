@@ -87,6 +87,7 @@ app.include_router(session.router, prefix="/api/session")
 
 @app.get("/api/health")
 async def health():
+    from urllib.parse import urlparse
     components = {}
     overall = "ok"
 
@@ -95,7 +96,9 @@ async def health():
         await redis.ping()
         components["redis"] = "ok"
     except Exception as e:
+        parsed = urlparse(settings.redis_url)
         components["redis"] = f"error: {type(e).__name__}: {e}"
+        components["redis_host_debug"] = f"{parsed.hostname}:{parsed.port}"
         overall = "degraded"
 
     try:
