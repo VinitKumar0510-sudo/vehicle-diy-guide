@@ -1,4 +1,5 @@
 import ssl
+from urllib.parse import urlparse
 import redis.asyncio as aioredis
 from app.config import get_settings
 
@@ -9,15 +10,15 @@ async def get_redis() -> aioredis.Redis:
     global _redis
     if _redis is None:
         settings = get_settings()
-        # Upstash uses rediss:// (SSL) — ssl_cert_reqs=None skips cert verification
-        # which is required for Upstash's managed Redis
-        ssl_context = ssl.create_default_context()
-        ssl_context.check_hostname = False
-        ssl_context.verify_mode = ssl.CERT_NONE
-        _redis = aioredis.from_url(
-            settings.redis_url,
+        parsed = urlparse(settings.redis_url)
+        _redis = aioredis.Redis(
+            host=parsed.hostname,
+            port=parsed.port or 6380,
+            password=parsed.password,
+            username=parsed.username or None,
+            ssl=True,
+            ssl_cert_reqs=ssl.CERT_NONE,
             decode_responses=True,
-            ssl_context=ssl_context,
         )
     return _redis
 
