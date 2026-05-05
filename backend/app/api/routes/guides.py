@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from app.services.knowledge_builder.agent import build_guide
@@ -10,16 +10,16 @@ limiter = Limiter(key_func=get_remote_address)
 
 
 class IntentRequest(BaseModel):
-    query: str
-    vehicle_desc: str = ""
+    query: str = Field(..., min_length=1, max_length=500)
+    vehicle_desc: str = Field(default="", max_length=200)
 
 
 class GuideRequest(BaseModel):
-    make: str
-    model: str
-    year: int
-    repair: str
-    engine: str | None = None
+    make: str = Field(..., min_length=1, max_length=100)
+    model: str = Field(..., min_length=1, max_length=100)
+    year: int = Field(..., ge=1885, le=2030)
+    repair: str = Field(..., min_length=1, max_length=300)
+    engine: str | None = Field(default=None, max_length=100)
 
 
 @router.post("/intent")
